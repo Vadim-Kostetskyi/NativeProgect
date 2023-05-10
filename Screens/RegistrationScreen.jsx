@@ -16,7 +16,6 @@ const RegistrationScreen = () => {
   const [loginIsFocused, setLoginIsFocused] = useState(false);
   const [mailIsFocused, setMailIsFocused] = useState(false);
   const [passwordIsFocused, setPasswordIsFocused] = useState(false);
-  const [secure, setSecure] = useState(true);
 
   const handleFocusLogin = () => {
     setLoginIsFocused(true);

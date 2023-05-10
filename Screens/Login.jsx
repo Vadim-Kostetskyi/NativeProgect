@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Image,
 } from "react-native";
 
 import React, { useState } from "react";
@@ -13,17 +12,8 @@ import React, { useState } from "react";
 import Input from "../components/Input";
 
 const LoginScreen = () => {
-  const [loginIsFocused, setLoginIsFocused] = useState(false);
   const [mailIsFocused, setMailIsFocused] = useState(false);
   const [passwordIsFocused, setPasswordIsFocused] = useState(false);
-  const [secure, setSecure] = useState(true);
-
-  const handleFocusLogin = () => {
-    setLoginIsFocused(true);
-  };
-  const handleBlurLogin = () => {
-    setLoginIsFocused(false);
-  };
 
   const handleFocusMail = () => {
     setMailIsFocused(true);
