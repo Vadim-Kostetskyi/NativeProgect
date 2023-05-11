@@ -6,6 +6,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import React, { useState } from "react";
@@ -16,6 +18,11 @@ const RegistrationScreen = () => {
   const [loginIsFocused, setLoginIsFocused] = useState(false);
   const [mailIsFocused, setMailIsFocused] = useState(false);
   const [passwordIsFocused, setPasswordIsFocused] = useState(false);
+  const [secureText, setSecureText] = useState(true);
+
+  const [login, setLogin] = useState("");
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleFocusLogin = () => {
     setLoginIsFocused(true);
@@ -38,8 +45,14 @@ const RegistrationScreen = () => {
     setPasswordIsFocused(false);
   };
 
+  const onRegister = () => {
+    console.log(`Логін: ${login},Пошта: ${mail},Пароль: ${password}`);
+  };
+
   const props = [
     {
+      value: login,
+      onChangeText: setLogin,
       placeholder: "Логин",
       onFocus: handleFocusLogin,
       onBlur: handleBlurLogin,
@@ -47,6 +60,8 @@ const RegistrationScreen = () => {
       stylesFocusedInput: styles.focusedInput,
     },
     {
+      value: mail,
+      onChangeText: setMail,
       placeholder: "Адрес электронной почты",
       onFocus: handleFocusMail,
       onBlur: handleBlurMail,
@@ -54,14 +69,16 @@ const RegistrationScreen = () => {
       stylesFocusedInput: styles.focusedInput,
     },
     {
+      value: password,
+      onChangeText: setPassword,
       placeholder: "Пароль",
       onFocus: handleFocusPassword,
       onBlur: handleBlurPassword,
       isFocused: passwordIsFocused,
       stylesFocusedInput: styles.focusedInput,
       margin: styles.lastInput,
-      secureTextEntry: true,
-      password: "yes",
+      secureTextEntry: secureText,
+      secureTextShow: setSecureText,
     },
   ];
 
@@ -74,23 +91,30 @@ const RegistrationScreen = () => {
             style={styles.photoAdd}
           />
         </View>
-        <Text style={styles.header}>Регистрация</Text>
-        {props.map((prop, index) => {
-          return (
-            <Input
-              key={index}
-              placeholder={prop.placeholder}
-              onFocus={prop.onFocus}
-              onBlur={prop.onBlur}
-              isFocused={prop.isFocused}
-              stylesFocusedInput={prop.stylesFocusedInput}
-              margin={prop.margin}
-              password={prop.password}
-              secureTextEntry={prop.secureTextEntry}
-            />
-          );
-        })}
-        <TouchableOpacity style={styles.button}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+          style={{ width: "100%" }}
+        >
+          <Text style={styles.header}>Регистрация</Text>
+          {props.map((prop, index) => {
+            return (
+              <Input
+                key={index}
+                value={prop.value}
+                onChangeText={prop.onChangeText}
+                placeholder={prop.placeholder}
+                onFocus={prop.onFocus}
+                onBlur={prop.onBlur}
+                isFocused={prop.isFocused}
+                stylesFocusedInput={prop.stylesFocusedInput}
+                margin={prop.margin}
+                secureTextEntry={prop.secureTextEntry}
+                secureTextShow={prop.secureTextShow}
+              />
+            );
+          })}
+        </KeyboardAvoidingView>
+        <TouchableOpacity style={styles.button} onPress={onRegister}>
           <Text style={styles.buttonText}>Зарегистрироваться</Text>
         </TouchableOpacity>
 
@@ -157,6 +181,9 @@ const styles = StyleSheet.create({
   },
   redirect: {
     marginBottom: 45,
+  },
+  focusedInput: {
+    borderColor: "#FF6C00",
   },
 });
 

@@ -7,6 +7,8 @@ import {
 } from "react-native";
 
 const Input = ({
+  value,
+  onChangeText,
   placeholder,
   onFocus,
   onBlur,
@@ -15,7 +17,7 @@ const Input = ({
   textContentType,
   margin,
   secureTextEntry,
-  password,
+  secureTextShow,
 }) => {
   return (
     <View style={defaultStyles.container}>
@@ -25,6 +27,8 @@ const Input = ({
           margin || defaultStyles.margin,
           isFocused && stylesFocusedInput,
         ]}
+        value={value}
+        onChangeText={onChangeText}
         placeholder={placeholder}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -32,9 +36,20 @@ const Input = ({
         secureTextEntry={secureTextEntry}
       />
 
-      {password && (
-        <TouchableOpacity style={defaultStyles.hide}>
+      {secureTextEntry && (
+        <TouchableOpacity
+          style={defaultStyles.hide}
+          onPress={() => secureTextShow(!secureTextEntry)}
+        >
           <Text>Показать</Text>
+        </TouchableOpacity>
+      )}
+      {!secureTextEntry && secureTextShow && (
+        <TouchableOpacity
+          style={defaultStyles.hide}
+          onPress={() => secureTextShow(!secureTextEntry)}
+        >
+          <Text>Скрыть</Text>
         </TouchableOpacity>
       )}
     </View>

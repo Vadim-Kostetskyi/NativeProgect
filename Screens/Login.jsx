@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import React, { useState } from "react";
@@ -14,6 +16,10 @@ import Input from "../components/Input";
 const LoginScreen = () => {
   const [mailIsFocused, setMailIsFocused] = useState(false);
   const [passwordIsFocused, setPasswordIsFocused] = useState(false);
+  const [secureText, setSecureText] = useState(true);
+
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleFocusMail = () => {
     setMailIsFocused(true);
@@ -29,8 +35,14 @@ const LoginScreen = () => {
     setPasswordIsFocused(false);
   };
 
+  const onRegister = () => {
+    console.log(`Пошта: ${mail},Пароль: ${password}`);
+  };
+
   const props = [
     {
+      value: mail,
+      onChangeText: setMail,
       placeholder: "Адрес электронной почты",
       onFocus: handleFocusMail,
       onBlur: handleBlurMail,
@@ -38,14 +50,16 @@ const LoginScreen = () => {
       stylesFocusedInput: styles.focusedInput,
     },
     {
+      value: password,
+      onChangeText: setPassword,
       placeholder: "Пароль",
       onFocus: handleFocusPassword,
       onBlur: handleBlurPassword,
       isFocused: passwordIsFocused,
       stylesFocusedInput: styles.focusedInput,
       margin: styles.lastInput,
-      secureTextEntry: true,
-      password: "yes",
+      secureTextEntry: secureText,
+      secureTextShow: setSecureText,
     },
   ];
 
@@ -53,22 +67,29 @@ const LoginScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <Text style={styles.header}>Войти</Text>
-        {props.map((prop, index) => {
-          return (
-            <Input
-              key={index}
-              placeholder={prop.placeholder}
-              onFocus={prop.onFocus}
-              onBlur={prop.onBlur}
-              isFocused={prop.isFocused}
-              stylesFocusedInput={prop.stylesFocusedInput}
-              margin={prop.margin}
-              password={prop.password}
-              secureTextEntry={prop.secureTextEntry}
-            />
-          );
-        })}
-        <TouchableOpacity style={styles.button}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+          style={{ width: "100%" }}
+        >
+          {props.map((prop, index) => {
+            return (
+              <Input
+                key={index}
+                value={prop.value}
+                onChangeText={prop.onChangeText}
+                placeholder={prop.placeholder}
+                onFocus={prop.onFocus}
+                onBlur={prop.onBlur}
+                isFocused={prop.isFocused}
+                stylesFocusedInput={prop.stylesFocusedInput}
+                margin={prop.margin}
+                secureTextEntry={prop.secureTextEntry}
+                secureTextShow={prop.secureTextShow}
+              />
+            );
+          })}
+        </KeyboardAvoidingView>
+        <TouchableOpacity style={styles.button} onPress={onRegister}>
           <Text style={styles.buttonText}>Войти</Text>
         </TouchableOpacity>
 
@@ -119,6 +140,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#FFFFFF",
+  },
+  focusedInput: {
+    borderColor: "#FF6C00",
   },
   redirect: {
     marginBottom: 111,
