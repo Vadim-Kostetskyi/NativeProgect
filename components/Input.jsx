@@ -1,10 +1,7 @@
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  View,
-} from "react-native";
+import { TextInput, TouchableOpacity, Text, View } from "react-native";
+import { useFonts } from "expo-font";
+
+import { styles } from "../Screens/styles";
 
 const Input = ({
   value,
@@ -15,21 +12,30 @@ const Input = ({
   isFocused,
   stylesFocusedInput,
   textContentType,
-  margin,
+  lastInputMargin,
   secureTextEntry,
   secureTextShow,
 }) => {
+  const [fontsLoaded] = useFonts({
+    "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
   return (
-    <View style={defaultStyles.container}>
+    <View style={styles.containerInput}>
       <TextInput
         style={[
-          defaultStyles.input,
-          margin || defaultStyles.margin,
+          styles.input,
+          lastInputMargin || styles.lastInputMargin,
           isFocused && stylesFocusedInput,
+          { fontFamily: "Roboto-Regular" },
         ]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
+        placeholderTextColor="#BDBDBD"
         onFocus={onFocus}
         onBlur={onBlur}
         textContentType={textContentType}
@@ -38,53 +44,26 @@ const Input = ({
 
       {secureTextEntry && (
         <TouchableOpacity
-          style={defaultStyles.hide}
+          style={styles.hide}
           onPress={() => secureTextShow(!secureTextEntry)}
         >
-          <Text>Показать</Text>
+          <Text style={[styles.redirect, { fontFamily: "Roboto-Regular" }]}>
+            Показать
+          </Text>
         </TouchableOpacity>
       )}
       {!secureTextEntry && secureTextShow && (
         <TouchableOpacity
-          style={defaultStyles.hide}
+          style={[styles.hide, { fontFamily: "Roboto-Regular" }]}
           onPress={() => secureTextShow(!secureTextEntry)}
         >
-          <Text>Скрыть</Text>
+          <Text style={[styles.redirect, { fontFamily: "Roboto-Regular" }]}>
+            Скрыть
+          </Text>
         </TouchableOpacity>
       )}
     </View>
   );
 };
-
-const defaultStyles = StyleSheet.create({
-  container: {
-    width: "100%",
-  },
-  input: {
-    width: "100%",
-    height: 50,
-
-    padding: 16,
-
-    backgroundColor: "rgb(246, 246, 246)",
-
-    fontSize: 16,
-    lineHeight: 19,
-
-    borderColor: "#E8E8E8",
-    borderStyle: "solid",
-    borderWidth: 1,
-
-    borderRadius: 8,
-  },
-  margin: {
-    marginBottom: 16,
-  },
-  hide: {
-    position: "absolute",
-    right: 16,
-    top: 16,
-  },
-});
 
 export default Input;

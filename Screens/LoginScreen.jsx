@@ -4,36 +4,28 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Image,
   Platform,
   KeyboardAvoidingView,
   ImageBackground,
 } from "react-native";
 
-import { useState } from "react";
+import { useFonts } from "expo-font";
+
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import Input from "../components/Input";
 import { styles } from "./styles";
 
-const RegistrationScreen = () => {
+const LoginScreen = () => {
   const navigation = useNavigation();
 
-  const [loginIsFocused, setLoginIsFocused] = useState(false);
   const [mailIsFocused, setMailIsFocused] = useState(false);
   const [passwordIsFocused, setPasswordIsFocused] = useState(false);
   const [secureText, setSecureText] = useState(true);
 
-  const [login, setLogin] = useState("");
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleFocusLogin = () => {
-    setLoginIsFocused(true);
-  };
-  const handleBlurLogin = () => {
-    setLoginIsFocused(false);
-  };
 
   const handleFocusMail = () => {
     setMailIsFocused(true);
@@ -50,19 +42,10 @@ const RegistrationScreen = () => {
   };
 
   // const onRegister = () => {
-  //   console.log(`Логін: ${login},Пошта: ${mail},Пароль: ${password}`);
+  //   console.log(`Пошта: ${mail},Пароль: ${password}`);
   // };
 
   const props = [
-    {
-      value: login,
-      onChangeText: setLogin,
-      placeholder: "Логин",
-      onFocus: handleFocusLogin,
-      onBlur: handleBlurLogin,
-      isFocused: loginIsFocused,
-      stylesFocusedInput: styles.focusedInput,
-    },
     {
       value: mail,
       onChangeText: setMail,
@@ -86,24 +69,29 @@ const RegistrationScreen = () => {
     },
   ];
 
+  const [fontsLoaded] = useFonts({
+    "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <ImageBackground
       source={require("../assets/images/background.png")}
       style={styles.background}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={[styles.container, { paddingTop: 92 }]}>
-          <View style={styles.photoBox}>
-            <Image
-              source={require("../assets/images/add.png")}
-              style={styles.photoAdd}
-            />
-          </View>
+        <View style={styles.container}>
+          <Text style={[styles.header, { fontFamily: "Roboto-Medium" }]}>
+            Войти
+          </Text>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={{ width: "100%" }}
           >
-            <Text style={styles.header}>Регистрация</Text>
             {props.map((prop, index) => {
               return (
                 <Input
@@ -126,19 +114,20 @@ const RegistrationScreen = () => {
             style={styles.button}
             onPress={() =>
               navigation.navigate("Home", {
-                recordedLogin: login,
                 recordedMail: mail,
               })
             }
           >
-            <Text style={styles.buttonText}>Зарегистрироваться</Text>
+            <Text style={styles.buttonText}>Войти</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{ marginBottom: 45 }}
-            onPress={() => navigation.navigate("Login")}
+            style={{ marginBottom: 111 }}
+            onPress={() => navigation.navigate("Register")}
           >
-            <Text>Уже есть аккаунт? Войти</Text>
+            <Text style={styles.redirect}>
+              Нет аккаунта? Зарегистрироваться
+            </Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
@@ -146,4 +135,4 @@ const RegistrationScreen = () => {
   );
 };
 
-export default RegistrationScreen;
+export default LoginScreen;
