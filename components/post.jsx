@@ -53,7 +53,10 @@ const Post = ({
         <View style={{ display: "flex", flexDirection: "row" }}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("Map", { location: recordLocation })
+              navigation.navigate("Map", {
+                location: recordLocation,
+                title: title,
+              })
             }
           >
             <Feather
