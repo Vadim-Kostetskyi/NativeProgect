@@ -1,4 +1,7 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export const styles = StyleSheet.create({
   background: {
@@ -103,13 +106,14 @@ export const styles = StyleSheet.create({
 
   //post screen
   postContainer: {
+    flex: 1,
     paddingTop: 32,
     paddingLeft: 16,
     paddingRight: 16,
+    backgroundColor: "#fff",
   },
   imageBox: {
     justifyContent: "center",
-    alignItems: "center",
     height: 240,
     marginBottom: 8,
 
@@ -118,6 +122,7 @@ export const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     borderStyle: "solid",
     borderRadius: 8,
+    overflow: "hidden",
   },
   postInput: {
     height: 50,
@@ -125,13 +130,61 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#E8E8E8",
   },
+
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#FFFFFF",
+    opacity: 0.3,
+    zIndex: -1,
+  },
+  imageButton: {
+    position: "absolute",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 60,
+    height: 60,
+    top: 120,
+    left: "50%",
+    borderRadius: 30,
+    overflow: "hidden",
+
+    transform: [{ translateX: -30 }, { translateY: -30 }],
+
+    zIndex: 10,
+  },
+
+  //camera
+  camera: { flex: 1 },
+  photoView: {
+    flex: 1,
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  flipContainer: {
+    flex: 0.1,
+    alignSelf: "flex-end",
+  },
   photoButton: {
+    position: "relative",
     width: 60,
     height: 60,
     alignItems: "center",
     justifyContent: "center",
 
     borderRadius: 30,
-    backgroundColor: "#FFFFFF",
+    overflow: "hidden",
+  },
+
+  //post
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
   },
 });

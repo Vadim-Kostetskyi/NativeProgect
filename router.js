@@ -6,9 +6,14 @@ import LoginScreen from "./Screens/LoginScreen";
 import HomeScreen from "./Screens/Home";
 import CreatePostsScreen from "./Screens/CreatePostsScreen";
 import PostsScreen from "./Screens/PostsScreen";
+import CommentsScreen from "./Screens/CommentsScreen";
+import MapScreen from "./Screens/MapScreen";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+import Home from "./Screens/MapScreen";
+import Post from "./components/post";
 
 import {
   Ionicons,
@@ -19,6 +24,38 @@ import {
 
 const AuthStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
+
+function HomeStack() {
+  return (
+    <AuthStack.Navigator>
+      <AuthStack.Screen
+        name="Posts"
+        component={PostsScreen}
+        options={{
+          title: "Публикации",
+          headerRight: () => (
+            <Feather
+              name="log-out"
+              size={24}
+              color="#BDBDBD"
+              style={{ marginRight: 16 }}
+            />
+          ),
+        }}
+      />
+      <AuthStack.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={{ title: "Комментарии" }}
+      />
+      <AuthStack.Screen
+        name="Map"
+        component={MapScreen}
+        options={{ title: "Карта" }}
+      />
+    </AuthStack.Navigator>
+  );
+}
 
 const routerScreen = (isAuth) => {
   if (!isAuth) {
@@ -57,14 +94,14 @@ const routerScreen = (isAuth) => {
     >
       <Tabs.Screen
         name="PostsScreen"
-        component={PostsScreen}
+        component={HomeStack}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <TouchableOpacity>
               <SimpleLineIcons name="grid" size={24} color={color} />
             </TouchableOpacity>
           ),
-          title: "Публикации",
+          headerShown: false,
           headerStyle: {
             // backgroundColor: "#f4511e",
           },
@@ -72,19 +109,12 @@ const routerScreen = (isAuth) => {
             // fontWeight: "bold",
             // fontSize: 20,
           },
-          headerRight: () => (
-            <Feather
-              name="log-out"
-              size={24}
-              color="#BDBDBD"
-              style={{ marginRight: 16 }}
-            />
-          ),
         }}
       />
       <Tabs.Screen
         name="CreatePostsScreen"
         component={CreatePostsScreen}
+        // component={Home}
         style={{ width: 70 }}
         options={{
           title: "Создать публикацию",
@@ -102,8 +132,9 @@ const routerScreen = (isAuth) => {
         }}
       />
       <Tabs.Screen
-        name="ProfileScreen"
-        component={HomeScreen}
+        name="Profile"
+        // component={HomeScreen}
+        component={Post}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => (

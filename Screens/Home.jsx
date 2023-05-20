@@ -13,7 +13,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { styles } from "./styles";
 
-const RegistrationScreen = () => {
+const HomeScreen = () => {
   return (
     <ImageBackground
       source={require("../assets/images/background.png")}
@@ -49,4 +49,4 @@ const RegistrationScreen = () => {
   );
 };
 
-export default RegistrationScreen;
+export default HomeScreen;
