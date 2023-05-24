@@ -1,33 +1,31 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, ScrollView } from "react-native";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Post from "../components/post";
 import { styles } from "./styles";
+import { useSelector } from "react-redux";
+import { doc, getDoc } from "firebase/firestore";
+import { db, storage } from "../config";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const PostsScreen = () => {
-  // const [title, setTitle] = useState(null);
-  // const [locationText, setLocationText] = useState(null);
-  // const [photoUri, setPhotoUri] = useState(null);
-  // const [location, setLocation] = useState(null);
+  const [posts, setPosts] = useState(null);
+  const [comments, setComments] = useState(null);
 
-  const {
-    params: {
-      recordedMail,
-      recordedLogin,
-      recordTitle,
-      recordLocationText,
-      recordPhotoUri,
-      recordLocation,
-    } = {},
-  } = useRoute();
+  const { email, nickname, userId } = useSelector((state) => state);
 
-  // useFocusEffect(() => {
-  //   setTitle(recordTitle);
-  //   setLocation(recordLocation);
-  //   setPhotoUri(recordPhotoUri);
-  //   setLocationText(recordLocationText);
-  // });
+  useEffect(() => {
+    (async () => {
+      const querySnapshot = await getDocs(collection(db, "posts"));
+
+      const updatedPosts = await querySnapshot.docs.map((doc) => {
+        return { id: doc.id, data: doc.data() };
+      });
+
+      setPosts(updatedPosts);
+    })();
+  }, []);
 
   const [fontsLoaded] = useFonts({
     "Roboto-Bold": require("../assets/fonts/Roboto-Bold.ttf"),
@@ -39,7 +37,12 @@ const PostsScreen = () => {
   }
 
   return (
-    <View style={styles.postContainer}>
+    <ScrollView
+      contentContainerStyle={[
+        styles.postContainer,
+        { paddingBottom: 40, flex: 0 },
+      ]}
+    >
       <View
         style={{
           display: "flex",
@@ -60,7 +63,7 @@ const PostsScreen = () => {
               color: "#212121",
             }}
           >
-            {recordedLogin || "Natali Romanova"}
+            {nickname}
           </Text>
           <Text
             style={{
@@ -71,20 +74,23 @@ const PostsScreen = () => {
               opacity: 0.8,
             }}
           >
-            {recordedMail || "email@example.com"}
+            {email}
           </Text>
         </View>
       </View>
-      {recordPhotoUri && (
-        <Post
-          key={recordPhotoUri}
-          photoUri={recordPhotoUri}
-          title={recordTitle}
-          locationText={recordLocationText}
-          recordLocation={recordLocation}
-        />
-      )}
-    </View>
+      {posts &&
+        posts.map((el, index) => (
+          <Post
+            key={el.id}
+            id={el.id}
+            photoUri={el.data.photo}
+            title={el.data.title}
+            locationText={el.data.locationText}
+            recordLocation={el.data.location}
+            commentsNumber={el.data.commentsNumber}
+          />
+        ))}
+    </ScrollView>
   );
 };
 export default PostsScreen;

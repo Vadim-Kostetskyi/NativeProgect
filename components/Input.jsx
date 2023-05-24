@@ -1,5 +1,6 @@
 import { TextInput, TouchableOpacity, Text, View } from "react-native";
 import { useFonts } from "expo-font";
+import { AntDesign } from "@expo/vector-icons";
 
 import { styles } from "../Screens/styles";
 
@@ -15,6 +16,7 @@ const Input = ({
   lastInputMargin,
   secureTextEntry,
   secureTextShow,
+  submit,
 }) => {
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
@@ -24,13 +26,19 @@ const Input = ({
     return null;
   }
   return (
-    <View style={styles.containerInput}>
+    <View
+      style={[
+        styles.containerInput,
+        { position: "absolute", bottom: 16, left: 16 },
+      ]}
+    >
       <TextInput
         style={[
           styles.input,
           lastInputMargin || styles.lastInputMargin,
           isFocused && stylesFocusedInput,
           { fontFamily: "Roboto-Regular" },
+          submit && { borderRadius: 100 },
         ]}
         value={value}
         onChangeText={onChangeText}
@@ -60,6 +68,11 @@ const Input = ({
           <Text style={[styles.redirect, { fontFamily: "Roboto-Regular" }]}>
             Скрыть
           </Text>
+        </TouchableOpacity>
+      )}
+      {submit && (
+        <TouchableOpacity style={styles.postCommentButton} onPress={submit}>
+          <AntDesign name="arrowup" size={24} color="#FFFFFF" />
         </TouchableOpacity>
       )}
     </View>

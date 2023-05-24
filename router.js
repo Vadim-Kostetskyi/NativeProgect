@@ -11,9 +11,8 @@ import MapScreen from "./Screens/MapScreen";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-import Home from "./Screens/MapScreen";
-import Post from "./components/post";
+import { authSignOutUser } from "./redux/auth/authOperations";
+import { useDispatch } from "react-redux";
 
 import {
   Ionicons,
@@ -25,7 +24,12 @@ import {
 const AuthStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
 
+const logOut = (dispatch) => {
+  dispatch(authSignOutUser());
+};
+
 function HomeStack() {
+  const dispatch = useDispatch();
   return (
     <AuthStack.Navigator>
       <AuthStack.Screen
@@ -38,6 +42,7 @@ function HomeStack() {
               name="log-out"
               size={24}
               color="#BDBDBD"
+              onPress={() => logOut(dispatch)}
               style={{ marginRight: 16 }}
             />
           ),
@@ -58,6 +63,8 @@ function HomeStack() {
 }
 
 const routerScreen = (isAuth) => {
+  const dispatch = useDispatch();
+
   if (!isAuth) {
     return (
       <>
@@ -114,7 +121,6 @@ const routerScreen = (isAuth) => {
       <Tabs.Screen
         name="CreatePostsScreen"
         component={CreatePostsScreen}
-        // component={Home}
         style={{ width: 70 }}
         options={{
           title: "Создать публикацию",
@@ -126,6 +132,7 @@ const routerScreen = (isAuth) => {
               name="log-out"
               size={24}
               color="#BDBDBD"
+              onPress={() => logOut(dispatch)}
               style={{ marginRight: 16 }}
             />
           ),
@@ -133,12 +140,19 @@ const routerScreen = (isAuth) => {
       />
       <Tabs.Screen
         name="Profile"
-        // component={HomeScreen}
-        component={Post}
+        component={HomeScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => (
             <Feather name="user" size={24} color={color} />
+          ),
+          headerRight: () => (
+            <Feather
+              name="log-out"
+              size={24}
+              color="#BDBDBD"
+              style={{ marginRight: 16 }}
+            />
           ),
         }}
       />

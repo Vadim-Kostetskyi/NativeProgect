@@ -10,7 +10,6 @@ export const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -21,11 +20,13 @@ export const styles = StyleSheet.create({
   },
   photoBox: {
     position: "absolute",
+    left: "50%",
     top: -60,
     width: 120,
     height: 120,
     backgroundColor: "#F6F6F6",
     borderRadius: 16,
+    transform: [{ translateX: -windowWidth / 9 }],
   },
   photoAdd: {
     position: "absolute",
@@ -67,6 +68,8 @@ export const styles = StyleSheet.create({
   redirect: {
     fontSize: 16,
     lineHeight: 19,
+    marginLeft: "auto",
+    marginRight: "auto",
 
     color: "#1B4371",
   },
@@ -102,6 +105,17 @@ export const styles = StyleSheet.create({
     position: "absolute",
     right: 16,
     top: 16,
+  },
+  postCommentButton: {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+    top: 8,
+    right: 8,
+    width: 34,
+    height: 34,
+    backgroundColor: "#FF6C00",
+    borderRadius: 17,
   },
 
   //post screen

@@ -16,16 +16,24 @@ import { useNavigation } from "@react-navigation/native";
 
 import Input from "../components/Input";
 import { styles } from "./styles";
+import { loginDB } from "../redux/auth/authOperations";
+import { useDispatch } from "react-redux";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [mailIsFocused, setMailIsFocused] = useState(false);
   const [passwordIsFocused, setPasswordIsFocused] = useState(false);
   const [secureText, setSecureText] = useState(true);
 
-  const [mail, setMail] = useState("");
+  const [email, setMail] = useState("");
   const [password, setPassword] = useState("");
+
+  const state = {
+    userEmail: email,
+    password,
+  };
 
   const handleFocusMail = () => {
     setMailIsFocused(true);
@@ -41,13 +49,9 @@ const LoginScreen = () => {
     setPasswordIsFocused(false);
   };
 
-  // const onRegister = () => {
-  //   console.log(`Пошта: ${mail},Пароль: ${password}`);
-  // };
-
   const props = [
     {
-      value: mail,
+      value: email,
       onChangeText: setMail,
       placeholder: "Адрес электронной почты",
       onFocus: handleFocusMail,
@@ -77,6 +81,12 @@ const LoginScreen = () => {
   if (!fontsLoaded) {
     return null;
   }
+
+  const hendleSubmit = () => {
+    setPassword("");
+    setMail("");
+    dispatch(loginDB(state, dispatch));
+  };
 
   return (
     <ImageBackground
@@ -110,14 +120,7 @@ const LoginScreen = () => {
               );
             })}
           </KeyboardAvoidingView>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigation.navigate("Home", {
-                recordedMail: mail,
-              })
-            }
-          >
+          <TouchableOpacity style={styles.button} onPress={hendleSubmit}>
             <Text style={styles.buttonText}>Войти</Text>
           </TouchableOpacity>
 

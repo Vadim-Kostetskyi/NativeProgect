@@ -4,6 +4,7 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const Post = ({
+  id,
   photoUri,
   commentsNumber,
   title,
@@ -25,10 +26,9 @@ const Post = ({
         <View style={styles.flexRow}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("Comments", { photoUri: photoUri })
+              navigation.navigate("Comments", { photoUri: photoUri, id: id })
             }
           >
-            {/* //dfgdddfgdfgdfgdfgdgf */}
             <Image
               source={require("../assets/images/message-circle.png")}
               style={{
@@ -42,12 +42,12 @@ const Post = ({
           </TouchableOpacity>
           <Text
             style={
-              !commentsNumber
+              !commentsNumber > 0
                 ? { color: "rgb(189, 189, 189)" }
                 : { color: "rgb(0, 0, 0)" }
             }
           >
-            {commentsNumber ? commentsNumber : 0}
+            {commentsNumber > 0 ? commentsNumber : 0}
           </Text>
         </View>
         <View style={{ display: "flex", flexDirection: "row" }}>

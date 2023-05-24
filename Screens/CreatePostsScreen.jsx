@@ -8,6 +8,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
+import { storage, db } from "../config";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+import { useSelector } from "react-redux";
 
 const CreatePostsScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -19,6 +23,7 @@ const CreatePostsScreen = () => {
   const [locationText, setLocationText] = useState("");
 
   let allowPost = !!(photoUri && title && locationText);
+  const { nickname, userId } = useSelector((state) => state);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -26,8 +31,7 @@ const CreatePostsScreen = () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
 
-      let locationStatus = await Location.requestBackgroundPermissionsAsync();
-      console.log(locationStatus.status);
+      let locationStatus = await Location.requestForegroundPermissionsAsync();
 
       setHasPermission(status === "granted");
     })();
@@ -45,6 +49,35 @@ const CreatePostsScreen = () => {
     }
   };
 
+  const uploadPost = async (coords) => {
+    const response = await fetch(photoUri);
+    const file = await response.blob();
+
+    const date = new Date();
+    const storageRef = ref(storage, `images/${date}`);
+    let imageUtl;
+    await uploadBytes(storageRef, file).then((snapshot) => {
+      console.log(snapshot);
+    });
+
+    await getDownloadURL(ref(storage, `images/${date}`)).then((url) => {
+      imageUtl = url;
+    });
+
+    try {
+      await addDoc(collection(db, "posts"), {
+        photo: imageUtl,
+        title,
+        locationText,
+        location: coords,
+        nickname,
+        userId,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const publicPost = async () => {
     let location = await Location.getCurrentPositionAsync({});
     const coords = {
@@ -52,16 +85,13 @@ const CreatePostsScreen = () => {
       longitude: location.coords.longitude,
     };
 
-    navigation.navigate("Posts", {
-      recordTitle: title,
-      recordLocationText: locationText,
-      recordPhotoUri: photoUri,
-      recordLocation: coords,
-    });
+    navigation.navigate("Posts");
 
-    // setHasPermission(null);
-    // setCameraRef(null);
-    // setPhotoUri("");
+    uploadPost(coords);
+
+    setTitle("");
+    setLocationText("");
+    setPhotoUri("");
   };
 
   if (hasPermission === null) {

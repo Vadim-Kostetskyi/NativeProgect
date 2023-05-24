@@ -15,18 +15,27 @@ import { useNavigation } from "@react-navigation/native";
 
 import Input from "../components/Input";
 import { styles } from "./styles";
+import { useDispatch } from "react-redux";
+import { registerDB } from "../redux/auth/authOperations";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [loginIsFocused, setLoginIsFocused] = useState(false);
   const [mailIsFocused, setMailIsFocused] = useState(false);
   const [passwordIsFocused, setPasswordIsFocused] = useState(false);
   const [secureText, setSecureText] = useState(true);
 
-  const [login, setLogin] = useState("");
-  const [mail, setMail] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [email, setMail] = useState("");
   const [password, setPassword] = useState("");
+
+  const state = {
+    nickname,
+    userEmail: email,
+    password,
+  };
 
   const handleFocusLogin = () => {
     setLoginIsFocused(true);
@@ -49,14 +58,10 @@ const RegistrationScreen = () => {
     setPasswordIsFocused(false);
   };
 
-  // const onRegister = () => {
-  //   console.log(`Логін: ${login},Пошта: ${mail},Пароль: ${password}`);
-  // };
-
   const props = [
     {
-      value: login,
-      onChangeText: setLogin,
+      value: nickname,
+      onChangeText: setNickname,
       placeholder: "Логин",
       onFocus: handleFocusLogin,
       onBlur: handleBlurLogin,
@@ -64,7 +69,7 @@ const RegistrationScreen = () => {
       stylesFocusedInput: styles.focusedInput,
     },
     {
-      value: mail,
+      value: email,
       onChangeText: setMail,
       placeholder: "Адрес электронной почты",
       onFocus: handleFocusMail,
@@ -85,6 +90,13 @@ const RegistrationScreen = () => {
       secureTextShow: setSecureText,
     },
   ];
+
+  const hendleSubmit = () => {
+    setPassword("");
+    setMail("");
+    setNickname("");
+    dispatch(registerDB(state, dispatch));
+  };
 
   return (
     <ImageBackground
@@ -122,15 +134,7 @@ const RegistrationScreen = () => {
               );
             })}
           </KeyboardAvoidingView>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigation.navigate("Home", {
-                recordedLogin: login,
-                recordedMail: mail,
-              })
-            }
-          >
+          <TouchableOpacity style={styles.button} onPress={hendleSubmit}>
             <Text style={styles.buttonText}>Зарегистрироваться</Text>
           </TouchableOpacity>
 
@@ -138,7 +142,7 @@ const RegistrationScreen = () => {
             style={{ marginBottom: 45 }}
             onPress={() => navigation.navigate("Login")}
           >
-            <Text>Уже есть аккаунт? Войти</Text>
+            <Text style={styles.redirect}>Уже есть аккаунт? Войти</Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
