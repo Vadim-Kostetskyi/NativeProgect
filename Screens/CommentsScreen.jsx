@@ -26,7 +26,8 @@ const CommentsScreen = () => {
       );
 
       const updatedPosts = await querySnapshot.docs.map((doc) => {
-        return doc.data();
+        console.log(doc._key.path.segments[8]);
+        return { id: doc._key.path.segments[8], commentInfo: doc.data() };
       });
 
       setPost(updatedPosts);
@@ -119,6 +120,7 @@ const CommentsScreen = () => {
           post.map((el) => {
             return (
               <View
+                key={el.id}
                 style={{
                   padding: 16,
                   backgroundColor: " rgba(0, 0, 0, 0.03)",
@@ -126,7 +128,9 @@ const CommentsScreen = () => {
                   borderRadius: 6,
                 }}
               >
-                <Text style={{ marginBottom: 8 }}>{el.comment}</Text>
+                <Text style={{ marginBottom: 8 }}>
+                  {el.commentInfo.comment}
+                </Text>
                 <Text
                   style={[
                     {
@@ -137,7 +141,7 @@ const CommentsScreen = () => {
                     { textAlign: "right" },
                   ]}
                 >
-                  {el.date}
+                  {el.commentInfo.date}
                 </Text>
               </View>
             );

@@ -29,7 +29,7 @@ const Input = ({
     <View
       style={[
         styles.containerInput,
-        { position: "absolute", bottom: 16, left: 16 },
+        submit && { position: "absolute", bottom: 16, left: 16 },
       ]}
     >
       <TextInput
