@@ -109,13 +109,6 @@ const routerScreen = (isAuth) => {
             </TouchableOpacity>
           ),
           headerShown: false,
-          headerStyle: {
-            // backgroundColor: "#f4511e",
-          },
-          headerTitleStyle: {
-            // fontWeight: "bold",
-            // fontSize: 20,
-          },
         }}
       />
       <Tabs.Screen

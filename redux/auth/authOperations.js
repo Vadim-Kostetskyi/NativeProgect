@@ -10,7 +10,7 @@ import { authSlice } from "./authReduser";
 const { authSignOut, updateUserProfile, authStateChanges } = authSlice.actions;
 
 export const registerDB =
-  ({ userEmail, password, nickname }) =>
+  ({ userEmail, password, nickname, avatar }) =>
   async (dispatch, getState) => {
     try {
       const { user } = await createUserWithEmailAndPassword(
@@ -19,15 +19,16 @@ export const registerDB =
         password
       );
 
-      await updateProfile(user, { displayName: nickname });
+      await updateProfile(user, { displayName: nickname, photoURL: avatar });
 
-      const { uid, displayName, email } = await auth.currentUser;
+      const { uid, displayName, email, photoURL } = await auth.currentUser;
 
       dispatch(
         updateUserProfile({
           userId: uid,
           nickname: displayName,
           email,
+          photoURL,
         })
       );
     } catch (error) {
@@ -46,11 +47,33 @@ export const authStateChanged = () => async (dispatch, getState) => {
           nickname: user.displayName,
           userId: user.uid,
           email: user.email,
+          photoURL: user.photoURL,
         };
         dispatch(updateUserProfile(userUpdateProfile));
         dispatch(authStateChanges({ stateChange: true }));
       });
     });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const userProfileUpdate = (update) => async (dispatch, getState) => {
+  try {
+    const user = await auth.currentUser;
+
+    await updateProfile(user, update);
+
+    const { uid, displayName, email, photoURL } = await auth.currentUser;
+
+    dispatch(
+      updateUserProfile({
+        userId: uid,
+        nickname: displayName,
+        email,
+        photoURL,
+      })
+    );
   } catch (error) {
     throw error;
   }
@@ -66,13 +89,14 @@ export const loginDB =
         password
       );
 
-      const { uid, displayName, email } = await auth.currentUser;
+      const { uid, displayName, email, photoURL } = await auth.currentUser;
 
       dispatch(
         updateUserProfile({
           userId: uid,
           nickname: displayName,
           email,
+          photoURL,
         })
       );
       dispatch(authStateChanges({ stateChange: true }));

@@ -8,12 +8,9 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
 } from "react-native";
-
 import { useFonts } from "expo-font";
-
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-
 import Input from "../components/Input";
 import { styles } from "./styles";
 import { loginDB } from "../redux/auth/authOperations";

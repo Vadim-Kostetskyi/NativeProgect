@@ -32,6 +32,7 @@ export const styles = StyleSheet.create({
     position: "absolute",
     bottom: 14,
     right: -13,
+    color: "#FF6C00",
   },
   header: {
     fontWeight: 500,
@@ -118,7 +119,7 @@ export const styles = StyleSheet.create({
     borderRadius: 17,
   },
 
-  //post screen
+  //create post screen
   postContainer: {
     flex: 1,
     paddingTop: 32,
@@ -171,6 +172,15 @@ export const styles = StyleSheet.create({
 
     zIndex: 10,
   },
+  inputBox: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E8E8E8",
+    marginBottom: 32,
+    paddingLeft: 5,
+  },
 
   //camera
   camera: { flex: 1 },
@@ -196,9 +206,33 @@ export const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
-  //post
+  //post screen
   flexRow: {
     display: "flex",
     flexDirection: "row",
+  },
+  postNickname: {
+    fontFamily: "Roboto-Bold",
+    fontSize: 13,
+    lineHeight: 15,
+    color: "#212121",
+  },
+  postEmail: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 11,
+    lineHeight: 13,
+    color: "#212121",
+    opacity: 0.8,
+  },
+
+  //general
+  wholeBox: {
+    width: "100%",
+    height: "100%",
+  },
+  rotate45: {
+    transform: "rotate(45deg)",
+    backgroundColor: "#E8E8E8",
+    borderRadius: 13.5,
   },
 });

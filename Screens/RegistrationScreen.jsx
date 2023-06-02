@@ -9,14 +9,16 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
 } from "react-native";
-
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-
 import Input from "../components/Input";
 import { styles } from "./styles";
 import { useDispatch } from "react-redux";
 import { registerDB } from "../redux/auth/authOperations";
+import { storage } from "../config";
+import { AntDesign } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
@@ -30,11 +32,13 @@ const RegistrationScreen = () => {
   const [nickname, setNickname] = useState("");
   const [email, setMail] = useState("");
   const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState(null);
 
   const state = {
     nickname,
     userEmail: email,
     password,
+    avatar,
   };
 
   const handleFocusLogin = () => {
@@ -91,6 +95,35 @@ const RegistrationScreen = () => {
     },
   ];
 
+  const handleImagePicker = async () => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission to access storage is required!");
+      return;
+    }
+
+    const imagePickerResult = await ImagePicker.launchImageLibraryAsync();
+
+    if (!imagePickerResult.canceled) {
+      const imageUri = imagePickerResult.assets[0].uri;
+      const response = await fetch(imageUri);
+      const file = await response.blob();
+
+      const date = new Date();
+      const storageRef = ref(storage, `images/${date}`);
+      let imageUrl;
+      await uploadBytes(storageRef, file);
+
+      await getDownloadURL(ref(storage, `images/${date}`)).then((url) => {
+        imageUrl = url;
+      });
+
+      setAvatar(imageUrl);
+    }
+  };
+
   const hendleSubmit = () => {
     setPassword("");
     setMail("");
@@ -106,10 +139,15 @@ const RegistrationScreen = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={[styles.container, { paddingTop: 92 }]}>
           <View style={styles.photoBox}>
-            <Image
-              source={require("../assets/images/add.png")}
+            {avatar && (
+              <Image source={{ uri: avatar }} style={styles.wholeBox} />
+            )}
+            <TouchableOpacity
               style={styles.photoAdd}
-            />
+              onPress={handleImagePicker}
+            >
+              <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+            </TouchableOpacity>
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}

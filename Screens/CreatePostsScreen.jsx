@@ -1,9 +1,7 @@
 import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
 import { styles } from "./styles";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
-
+import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
-
 import React, { useState, useEffect, useRef } from "react";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
@@ -31,7 +29,7 @@ const CreatePostsScreen = () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
 
-      let locationStatus = await Location.requestForegroundPermissionsAsync();
+      await Location.requestForegroundPermissionsAsync();
 
       setHasPermission(status === "granted");
     })();
@@ -55,18 +53,16 @@ const CreatePostsScreen = () => {
 
     const date = new Date();
     const storageRef = ref(storage, `images/${date}`);
-    let imageUtl;
-    await uploadBytes(storageRef, file).then((snapshot) => {
-      console.log(snapshot);
-    });
+    let imageUrl;
+    await uploadBytes(storageRef, file);
 
     await getDownloadURL(ref(storage, `images/${date}`)).then((url) => {
-      imageUtl = url;
+      imageUrl = url;
     });
 
     try {
       await addDoc(collection(db, "posts"), {
-        photo: imageUtl,
+        photo: imageUrl,
         title,
         locationText,
         location: coords,
@@ -92,6 +88,7 @@ const CreatePostsScreen = () => {
     setTitle("");
     setLocationText("");
     setPhotoUri("");
+    setHasPermission("");
   };
 
   if (hasPermission === null) {
@@ -114,11 +111,8 @@ const CreatePostsScreen = () => {
             </TouchableOpacity>
           </View>
           {photoUri && (
-            <View style={{ width: "100%", height: "100%" }}>
-              <Image
-                source={{ uri: photoUri }}
-                style={{ width: "100%", height: "100%" }}
-              />
+            <View style={styles.wholeBox}>
+              <Image source={{ uri: photoUri }} style={styles.wholeBox} />
             </View>
           )}
         </Camera>
@@ -134,17 +128,7 @@ const CreatePostsScreen = () => {
         onChangeText={setTitle}
       />
 
-      <View
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "row",
-          borderBottomWidth: 1,
-          borderBottomColor: "#E8E8E8",
-          marginBottom: 32,
-          paddingLeft: 5,
-        }}
-      >
+      <View style={styles.inputBox}>
         <Feather
           name="map-pin"
           size={18}
