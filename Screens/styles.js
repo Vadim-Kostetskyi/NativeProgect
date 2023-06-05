@@ -182,6 +182,42 @@ export const styles = StyleSheet.create({
     paddingLeft: 5,
   },
 
+  //likes
+  likeListBox: {
+    position: "absolute",
+    justifyContent: "center",
+    alignContent: "center",
+    bottom: 25,
+    left: 35,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 5,
+    paddingTop: 5,
+
+    borderWidth: 1,
+    borderColor: "rgb(0, 0, 0)",
+    borderRadius: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    transition: "height 0.5s ease",
+  },
+  likeList: {
+    textAlign: "center",
+    color: "rgb(255, 255, 255)",
+    opacity: 1,
+  },
+  likeShowAllBox: {
+    marginTop: 5,
+
+    borderTopWidth: 1,
+    borderStyle: "dashed",
+    borderTopColor: "#21130d",
+    opacity: 0.5,
+  },
+  likeShowAllText: {
+    textAlign: "center",
+    color: "#FFFFFF",
+  },
+
   //camera
   camera: { flex: 1 },
   photoView: {

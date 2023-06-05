@@ -62,9 +62,7 @@ const PostsScreen = () => {
         }}
       >
         <Image
-          source={
-            photoURL ? { uri: photoURL } : require("../assets/images/photo.png")
-          }
+          source={photoURL ? { uri: photoURL } : ""}
           style={{ width: 60, height: 60, marginRight: 8, borderRadius: 16 }}
         />
         <View style={{ display: "flex", justifyContent: "center" }}>
